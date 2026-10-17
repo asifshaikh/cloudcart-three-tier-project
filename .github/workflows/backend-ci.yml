@@ -39,6 +39,8 @@ jobs:
 
       - name: Install dependencies
         run: |
+          cd backend
+          source venv/bin/activate
           python -m pip install --upgrade pip
           python -m pip install -r backend/requirements.txt
 

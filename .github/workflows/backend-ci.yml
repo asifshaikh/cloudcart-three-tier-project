@@ -1,0 +1,47 @@
+name: CloudCart Backend CI
+
+on:
+  push:
+    branches:
+      - 'backend/**'
+      - '.github/workflows/backend-ci.yml'
+      - 'main'
+  pull_request:
+    branches:
+      - 'backend/**'
+      - '.github/workflows/backend-ci.yml'
+      - 'main'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test Flask Backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Create and activate virtual environment
+        run: |
+          cd backend
+          python -m venv venv
+          source venv/bin/activate
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r backend/requirements.txt
+
+      - name: Run tests
+        run: |
+          python -m pytest -v

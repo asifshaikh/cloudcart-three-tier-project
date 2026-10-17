@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 from flask import Flask, jsonify
 from flask_cors import CORS
-from .extensions import db, jwt
+from .extensions import db, jwt, bcrypt
 from .routes import register_routes
 
 def create_app(test_config=None):
@@ -21,7 +21,7 @@ def create_app(test_config=None):
 
     db.init_app(app)
     jwt.init_app(app)
-
+    bcrypt.init_app(app)
     CORS(
         app,
         resources={

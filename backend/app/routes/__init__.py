@@ -1,4 +1,3 @@
+from .auth import auth_bp
 def register_routes(app):
-    # Authentication, product, and cart routes
-    # will be registered here as we implement them.
-    pass
+    app.register_blueprint(auth_bp)

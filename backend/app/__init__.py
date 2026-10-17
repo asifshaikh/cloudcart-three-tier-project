@@ -1,3 +1,4 @@
+from datetime import timedelta
 import os
 from dotenv import load_dotenv
 from flask import Flask, jsonify
@@ -15,6 +16,7 @@ def create_app(test_config=None):
         JWT_SECRET_KEY=os.getenv('JWT_SECRET_KEY'),
         SQLALCHEMY_DATABASE_URI=os.getenv('DATABASE_URL'),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
+        JWT_ACCESS_TOKEN_EXPIRES=timedelta(minutes=15),
     )
     if test_config:
         app.config.update(test_config)

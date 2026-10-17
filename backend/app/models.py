@@ -16,6 +16,9 @@ class User(db.Model):
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password_hash, password)
 
+    def check_password_length(self, password):
+        return len(password) >= 8
+
 class Product(db.Model):
     __tablename__ = 'products'
 

@@ -1,0 +1,11 @@
+services:
+  backend:
+    container_name: cloudcart_backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - '5000:5000'
+    env_file:
+      - ./backend/.env.docker
+    restart: unless-stopped

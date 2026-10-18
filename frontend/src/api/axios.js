@@ -7,6 +7,7 @@ const api = axios.create({
   },
 });
 
+// we use this to avoid passing the token in every request
 api.interceptors.request.use((config) => {
   const token = sessionStorage.getItem('cloudcart_token');
 

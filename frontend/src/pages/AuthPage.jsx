@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import { registerUser } from '../api/auth';
 import { useAuth } from '../context/AuthContext';
@@ -8,6 +8,7 @@ export default function AuthPage({ mode }) {
   const isRegister = mode === 'register';
   const navigate = useNavigate();
   const { login } = useAuth();
+  const location = useLocation();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -29,7 +30,9 @@ export default function AuthPage({ mode }) {
         setPassword('');
       } else {
         await login(email.trim(), password);
-        navigate('/', { replace: true });
+
+        const destination = location.state?.from || '/';
+        navigate(destination, { replace: true });
       }
     } catch (err) {
       const data = err.response?.data;

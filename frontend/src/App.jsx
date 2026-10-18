@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Home from './pages/Home';
 import AuthPage from './pages/AuthPage';
+import Cart from './pages/Cart';
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated, loadingUser } = useAuth();
@@ -18,21 +19,6 @@ function ProtectedRoute({ children }) {
   return children;
 }
 
-function CartPlaceholder() {
-  return (
-    <main className='app auth-page'>
-      <div>
-        <p className='eyebrow'>YOUR SHOPPING CART</p>
-        <h1>Cart integration comes next.</h1>
-        <p className='status'>
-          Your account is authenticated. We'll connect this page to the Flask
-          cart APIs in the next step.
-        </p>
-      </div>
-    </main>
-  );
-}
-
 function AppRoutes() {
   return (
     <Routes>
@@ -46,7 +32,7 @@ function AppRoutes() {
         path='/cart'
         element={
           <ProtectedRoute>
-            <CartPlaceholder />
+            <Cart />
           </ProtectedRoute>
         }
       />

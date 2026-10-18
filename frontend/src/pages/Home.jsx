@@ -2,12 +2,17 @@ import { useEffect, useState } from 'react';
 import { getProducts } from '../api/products';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { addToCart } from '../api/cart';
 import '../App.css';
 
 function App() {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [addingProductId, setAddingProductId] = useState(null);
+  const [cartMessage, setCartMessage] = useState('');
   const { user, isAuthenticated, logout } = useAuth();
 
   useEffect(() => {
@@ -96,6 +101,12 @@ function App() {
               No products found. Seed the database and try again.
             </p>
           )}
+          {cartMessage && (
+            <p className='status' role='status'>
+              {cartMessage}{' '}
+              {isAuthenticated && <Link to='/cart'>View cart</Link>}
+            </p>
+          )}
 
           {!loading && !error && products.length > 0 && (
             <div className='product-grid'>
@@ -123,12 +134,16 @@ function App() {
 
                     <button
                       className='add-button'
-                      disabled={product.stock <= 0}
-                      onClick={() =>
-                        alert('Cart functionality is coming in the next step!')
+                      disabled={
+                        product.stock <= 0 || addingProductId === product.id
                       }
+                      onClick={() => handleAddToCart(product)}
                     >
-                      {product.stock > 0 ? 'Add to cart' : 'Out of stock'}
+                      {addingProductId === product.id
+                        ? 'Adding...'
+                        : product.stock > 0
+                          ? 'Add to cart'
+                          : 'Out of stock'}
                     </button>
                   </div>
                 </article>
@@ -144,6 +159,30 @@ function App() {
       </footer>
     </div>
   );
+
+  async function handleAddToCart(product) {
+    setCartMessage('');
+
+    if (!isAuthenticated) {
+      navigate('/login', {
+        state: { from: '/' },
+      });
+      return;
+    }
+
+    setAddingProductId(product.id);
+
+    try {
+      await addToCart(product.id, 1);
+      setCartMessage(`${product.name} added to your cart.`);
+    } catch (err) {
+      setCartMessage(
+        err.response?.data?.error || 'Unable to add this product to your cart.',
+      );
+    } finally {
+      setAddingProductId(null);
+    }
+  }
 }
 
 export default App;

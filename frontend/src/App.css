@@ -1,0 +1,252 @@
+#root {
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 6%;
+}
+
+.navbar {
+  min-height: 82px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-family: "Manrope", sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.brand span {
+  color: #88a82b;
+}
+
+.navbar nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  font-size: 0.9rem;
+}
+
+.navbar nav>a {
+  color: var(--muted);
+}
+
+.cart-button {
+  background: var(--dark);
+  color: white;
+  border: 0;
+  border-radius: 24px;
+  padding: 11px 18px;
+}
+
+.hero {
+  padding: 100px 0 110px;
+  max-width: 720px;
+}
+
+.eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  font-weight: 700;
+  color: #70862e;
+}
+
+.hero h1 {
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(3rem, 7vw, 5.6rem);
+  letter-spacing: -4px;
+  line-height: 1.05;
+  margin: 22px 0;
+}
+
+.hero>p:not(.eyebrow) {
+  max-width: 460px;
+  color: var(--muted);
+  line-height: 1.8;
+  margin-bottom: 28px;
+}
+
+.primary-button {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--dark);
+  padding: 14px 22px;
+  border-radius: 6px;
+  font-weight: 700;
+}
+
+.products-section {
+  padding: 40px 0 100px;
+}
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.section-heading h2 {
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  letter-spacing: -1.5px;
+  margin: 8px 0 0;
+}
+
+.section-heading>span {
+  color: var(--muted);
+  font-size: 0.9rem;
+  padding-bottom: 6px;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.product-card {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: 10px;
+}
+
+.product-visual {
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+  background: #f0f1e9;
+}
+
+.product-visual span {
+  font-family: "Manrope", sans-serif;
+  font-size: 4rem;
+  font-weight: 800;
+  color: #c8d1ad;
+  letter-spacing: -5px;
+}
+
+.product-info {
+  padding: 20px;
+}
+
+.product-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 12px;
+}
+
+.product-title-row h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.product-title-row strong {
+  white-space: nowrap;
+}
+
+.product-description {
+  min-height: 44px;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.stock {
+  font-size: 0.8rem;
+  color: #667d2c;
+}
+
+.add-button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 13px;
+  border: 1px solid var(--dark);
+  background: var(--dark);
+  color: white;
+  border-radius: 5px;
+}
+
+.add-button:hover:not(:disabled) {
+  background: #3c4635;
+}
+
+.status {
+  color: var(--muted);
+  padding: 28px 0;
+}
+
+.error-message {
+  padding: 20px;
+  background: #fff0ed;
+  color: #9d3324;
+  border-radius: 8px;
+}
+
+.error-message button {
+  margin-left: 12px;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 28px 0;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 800px) {
+  .product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hero {
+    padding: 75px 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .app {
+    padding: 0 5%;
+  }
+
+  .navbar {
+    min-height: 72px;
+  }
+
+  .navbar nav {
+    gap: 12px;
+  }
+
+  .navbar nav>a {
+    display: none;
+  }
+
+  .hero h1 {
+    letter-spacing: -2px;
+  }
+
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-visual {
+    min-height: 180px;
+  }
+
+  .footer {
+    flex-direction: column;
+  }
+}

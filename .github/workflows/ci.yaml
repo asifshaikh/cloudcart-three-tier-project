@@ -74,4 +74,3 @@ jobs:
 
       - name: Build production frontend
         run: npm run build
-`

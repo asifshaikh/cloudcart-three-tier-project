@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudcart-config
+  namespace: cloudcart
+data:
+  MYSQL_DATABASE: cloudcart
+  MYSQL_USER: cloudcart_user
+  DB_HOST: db
+  DB_PORT: '3306'
+  FLASK_PORT: '5000'

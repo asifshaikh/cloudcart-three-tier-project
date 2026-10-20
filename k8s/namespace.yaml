@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cloudcart
+  labels:
+    app.kubernetes.io/name: cloudcart
+    app.kubernetes.io/part-of: cloudcart

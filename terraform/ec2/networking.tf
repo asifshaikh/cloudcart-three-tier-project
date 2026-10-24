@@ -55,5 +55,5 @@ resource "aws_route" "public_internet" {
 # Associate the public route table to the public subnet
 resource "aws_route_table_association" "public" {
   subnet_id      = aws_subnet.public.id
-  route_table_id = aws_vpc.cloudcart.main_route_table_id
+  route_table_id = aws_route_table.public.id
 }

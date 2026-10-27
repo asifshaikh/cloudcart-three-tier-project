@@ -1,3 +1,4 @@
+
 variable "aws_region" {
   description = "AWS region for CloudCart"
   type        = string
@@ -5,25 +6,27 @@ variable "aws_region" {
 }
 
 variable "project_name" {
-  description = "Name of the Project"
+  description = "Name of the project"
   type        = string
   default     = "cloudcart"
 }
 
 variable "instance_type" {
-  description = "EC2 instance type for cloudcart"
+  description = "EC2 instance type for CloudCart"
   type        = string
   default     = "t3.micro"
 }
 
-# variable "ssh_public_key_path" {
-#   description = "Path to your SSH public key"
-#   type        = string
-# }
+variable "ssh_public_key_path" {
+  description = "Path to the SSH public key"
+  type        = string
+  default     = "~/.ssh/id_ed25519.pub"
+}
 
 variable "allowed_ssh_cidr" {
-  description = "Your public IPv4 address in CIDR notation"
+  description = "Public IPv4 address permitted to SSH"
   type        = string
+
   validation {
     condition = (
       can(cidrnetmask(var.allowed_ssh_cidr)) &&
@@ -35,22 +38,7 @@ variable "allowed_ssh_cidr" {
 }
 
 variable "enable_ssh" {
-  description = "Whether to allow restricted SSH administration"
+  description = "Enable SSH access to EC2"
   type        = bool
-  default     = false
-}
-
-output "ec2_instance_id" {
-  description = "CloudCart EC2 instance ID"
-  value       = aws_instance.cloudcart.id
-}
-
-output "ec2_public_ip" {
-  description = "CloudCart EC2 public IPv4 address"
-  value       = aws_instance.cloudcart.public_ip
-}
-
-output "ec2_public_dns" {
-  description = "CloudCart EC2 public DNS"
-  value       = aws_instance.cloudcart.public_dns
+  default     = true
 }

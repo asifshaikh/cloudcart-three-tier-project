@@ -1,27 +1,31 @@
+
 resource "aws_security_group" "cloudcart" {
   name_prefix = "${var.project_name}-sg-"
   vpc_id      = aws_vpc.cloudcart.id
-  description = "Security group for CloudCart EC2 instances"
+  description = "Security group for CloudCart EC2"
 
+  # Public frontend
   ingress {
-    description = "HTTP access to CloudCart frontend"
+    description = "HTTP access to CloudCart"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  # Optional administrative SSH access
+
+  # Restricted SSH administration/deployment
   dynamic "ingress" {
     for_each = var.enable_ssh ? [1] : []
+
     content {
-      description = "SSH access to CloudCart instances"
+      description = "SSH access to CloudCart"
       from_port   = 22
       to_port     = 22
       protocol    = "tcp"
       cidr_blocks = [var.allowed_ssh_cidr]
     }
   }
-  # Outbound access for package downloads, image pulls, etc.
+
   egress {
     description = "Outbound IPv4 traffic"
     from_port   = 0
@@ -31,8 +35,10 @@ resource "aws_security_group" "cloudcart" {
   }
 
   tags = {
-    Name = "${var.project_name}-sg"
+    Name    = "${var.project_name}-sg"
+    Project = var.project_name
   }
+
   lifecycle {
     create_before_destroy = true
   }

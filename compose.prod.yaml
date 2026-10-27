@@ -1,27 +1,4 @@
 services:
-  backend:
-    image: ${BACKEND_IMAGE:?BACKEND_IMAGE must be set}
-    restart: unless-stopped
-    env_file:
-      - /opt/cloudcart/backend.env
-    expose:
-      - '5000'
-    depends_on:
-      db:
-        condition: service_healthy
-    healthcheck:
-      test:
-        - CMD
-        - python
-        - -c
-        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/health', timeout=3)"
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 30s
-    networks:
-      - cloudcart-internal
-
   db:
     image: ${MYSQL_IMAGE:-mysql:8.4}
     restart: unless-stopped
@@ -40,6 +17,43 @@ services:
       timeout: 5s
       retries: 12
       start_period: 40s
+    networks:
+      - cloudcart-internal
+
+  db-init:
+    image: ${BACKEND_IMAGE:?BACKEND_IMAGE must be set}
+    restart: 'no'
+    env_file:
+      - /opt/cloudcart/backend.env
+    command: >
+      sh -c "flask --app run init-db &&
+             flask --app run seed-products"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - cloudcart-internal
+
+  backend:
+    image: ${BACKEND_IMAGE:?BACKEND_IMAGE must be set}
+    restart: unless-stopped
+    env_file:
+      - /opt/cloudcart/backend.env
+    expose:
+      - '5000'
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/health', timeout=3)"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
     networks:
       - cloudcart-internal
 

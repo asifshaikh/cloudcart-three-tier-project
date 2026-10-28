@@ -23,3 +23,9 @@ jobs:
     needs: ci
     uses: ./.github/workflows/docker-push.yaml
     secrets: inherit
+
+  deploy:
+    name: CloudCart Deploy
+    needs: docker-push
+    uses: ./.github/workflows/deploy.yaml
+    secrets: inherit

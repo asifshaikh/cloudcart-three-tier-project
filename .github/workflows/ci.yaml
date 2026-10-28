@@ -8,14 +8,13 @@ on:
       - 'backend/**'
       - 'frontend/**'
       - '.github/workflows/**'
+      - 'compose.prod.yaml'
+      - 'scripts/**'
 
   pull_request:
     branches:
       - main
-    paths:
-      - 'backend/**'
-      - 'frontend/**'
-      - '.github/workflows/**'
+  workflow_dispatch:
 
 permissions:
   contents: read

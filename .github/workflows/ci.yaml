@@ -1,15 +1,7 @@
 name: CloudCart CI
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'backend/**'
-      - 'frontend/**'
-      - '.github/workflows/**'
-      - 'compose.prod.yaml'
-      - 'scripts/**'
+  workflow_call:
 
   pull_request:
     branches:

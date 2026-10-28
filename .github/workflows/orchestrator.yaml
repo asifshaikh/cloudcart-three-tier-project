@@ -1,0 +1,25 @@
+name: CloudCart CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudcart-release
+  cancel-in-progress: false
+
+jobs:
+  ci:
+    name: CloudCart CI
+    uses: ./.github/workflows/ci.yaml
+
+  docker-push:
+    name: CloudCart Docker Publish
+    needs: ci
+    uses: ./.github/workflows/docker-push.yaml
+    secrets: inherit

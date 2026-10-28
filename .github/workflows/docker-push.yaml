@@ -1,13 +1,7 @@
 name: CloudCart Docker Publish
 
 on:
-  workflow_run:
-    workflows:
-      - CloudCart CI
-    types:
-      - completed
-    branches:
-      - main
+  workflow_call:
 
 permissions:
   contents: read

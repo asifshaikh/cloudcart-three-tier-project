@@ -42,3 +42,9 @@ variable "enable_ssh" {
   type        = bool
   default     = true
 }
+
+variable "enable_github_actions_ssh" {
+  description = "Enable GitHub Actions SSH access to EC2"
+  type        = bool
+  default     = true
+}

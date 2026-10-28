@@ -43,3 +43,15 @@ resource "aws_security_group" "cloudcart" {
     create_before_destroy = true
   }
 }
+
+resource "aws_vpc_security_group_ingress_rule" "github_ssh" {
+  count = var.enable_github_actions_ssh ? 1 : 0
+
+  security_group_id = aws_security_group.cloudcart.id
+
+  description = "TEMPORARY GitHub Actions SSH access"
+  ip_protocol = "tcp"
+  from_port   = 22
+  to_port     = 22
+  cidr_ipv4   = "0.0.0.0/0"
+}

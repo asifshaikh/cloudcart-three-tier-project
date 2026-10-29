@@ -88,6 +88,56 @@ describe('CloudCart Add to cart', () => {
     );
   });
 
+  it('opens navigation with home, products, cart, and logout actions', async () => {
+    const user = userEvent.setup();
+
+    renderHome(true);
+
+    const menuButton = screen.getByRole('button', {
+      name: 'Open navigation menu',
+    });
+
+    expect(menuButton).toHaveAttribute('aria-expanded', 'false');
+    await user.click(menuButton);
+
+    expect(menuButton).toHaveAttribute('aria-label', 'Close navigation menu');
+    expect(menuButton).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute(
+      'href',
+      '/',
+    );
+    expect(screen.getByRole('link', { name: 'Products' })).toHaveAttribute(
+      'href',
+      '#products',
+    );
+    expect(screen.getByRole('link', { name: 'Cart' })).toHaveAttribute(
+      'href',
+      '/cart',
+    );
+    expect(screen.getByRole('button', { name: 'Logout' })).toBeInTheDocument();
+  });
+
+  it('shows login and sign up actions when logged out', async () => {
+    const user = userEvent.setup();
+
+    renderHome(false);
+    await user.click(
+      screen.getByRole('button', { name: 'Open navigation menu' }),
+    );
+
+    expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Products' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Login' })).toHaveAttribute(
+      'href',
+      '/login',
+    );
+    expect(screen.getByRole('link', { name: 'Sign up' })).toHaveAttribute(
+      'href',
+      '/register',
+    );
+    expect(screen.queryByRole('link', { name: 'Cart' })).not.toBeInTheDocument();
+  });
+
   it('redirects an unauthenticated user to login', async () => {
     const user = userEvent.setup();
 

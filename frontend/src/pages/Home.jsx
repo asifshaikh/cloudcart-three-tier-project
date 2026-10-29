@@ -13,6 +13,7 @@ function App() {
   const [error, setError] = useState('');
   const [addingProductId, setAddingProductId] = useState(null);
   const [cartMessage, setCartMessage] = useState('');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
 
   useEffect(() => {
@@ -33,6 +34,24 @@ function App() {
     loadProducts();
   }, []);
 
+  useEffect(() => {
+    if (!mobileMenuOpen) return undefined;
+
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') {
+        setMobileMenuOpen(false);
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
+
   return (
     <div className='app'>
       <header className='navbar'>
@@ -40,26 +59,86 @@ function App() {
           CloudCart<span>.</span>
         </Link>
 
-        <nav>
-          <a href='#products'>Products</a>
+        <button
+          className='menu-toggle'
+          type='button'
+          aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={mobileMenuOpen}
+          aria-controls='primary-navigation'
+          onClick={() => setMobileMenuOpen((isOpen) => !isOpen)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+
+        <nav
+          id='primary-navigation'
+          className={mobileMenuOpen ? 'mobile-open' : ''}
+          aria-label='Primary navigation'
+        >
+          <div className='mobile-navigation-header'>
+            <Link
+              className='brand'
+              to='/'
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              CloudCart<span>.</span>
+            </Link>
+            <button
+              className='menu-close'
+              type='button'
+              aria-label='Close navigation menu'
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <span />
+              <span />
+            </button>
+          </div>
+
+          <Link
+            className='mobile-home-link'
+            to='/'
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            Home
+          </Link>
+          <a href='#products' onClick={() => setMobileMenuOpen(false)}>
+            Products
+          </a>
 
           {isAuthenticated ? (
             <>
-              <Link to='/cart'>Cart</Link>
-              <span>{user.email}</span>
-              <button className='cart-button' onClick={logout}>
+              <Link to='/cart' onClick={() => setMobileMenuOpen(false)}>
+                Cart
+              </Link>
+              <span className='nav-user-email'>{user.email}</span>
+              <button
+                className='cart-button mobile-navigation-logout'
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  logout();
+                }}
+              >
                 Logout
               </button>
             </>
           ) : (
             <>
-              <Link to='/login'>Login</Link>
-              <Link to='/register' className='cart-button'>
+              <Link to='/login' onClick={() => setMobileMenuOpen(false)}>
+                Login
+              </Link>
+              <Link
+                to='/register'
+                className='cart-button'
+                onClick={() => setMobileMenuOpen(false)}
+              >
                 Sign up
               </Link>
             </>
           )}
         </nav>
+
       </header>
 
       <main>

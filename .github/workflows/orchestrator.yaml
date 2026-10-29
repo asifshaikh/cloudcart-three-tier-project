@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+      - 'compose.prod.yaml'
+      - 'scripts/deploy.sh'
+      - '.github/workflows/**'
+
   workflow_dispatch:
 
 permissions:

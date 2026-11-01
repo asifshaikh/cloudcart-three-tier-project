@@ -44,7 +44,7 @@ module "eks" {
       iam_role_use_name_prefix = false
 
       ami_type       = "AL2023_x86_64_STANDARD"
-      instance_types = ["t3.medium"]
+      instance_types = ["m7i-flex.large"]
       capacity_type  = "ON_DEMAND"
 
       min_size     = 1

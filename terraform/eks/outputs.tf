@@ -28,3 +28,24 @@ output "private_subnet_ids" {
 output "nat_public_ips" {
   value = module.network.nat_public_ips
 }
+
+output "eks_cluster_endpoint" {
+  description = "EKS API endpoint"
+  value       = module.eks.cluster_endpoint
+}
+
+output "eks_cluster_version" {
+  description = "EKS Kubernetes version"
+  value       = module.eks.cluster_version
+}
+
+output "eks_cluster_security_group_id" {
+  description = "EKS cluster security group"
+  value       = module.eks.cluster_security_group_id
+}
+
+output "eks_node_security_group_id" {
+  description = "EKS node security group"
+  value       = module.eks.node_security_group_id
+}
+

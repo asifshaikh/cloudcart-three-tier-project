@@ -49,3 +49,25 @@ variable "private_subnet_cidrs" {
     "10.20.11.0/24"
   ]
 }
+
+variable "kubernetes_version" {
+  description = "Kubernetes version for EKS"
+  type        = string
+}
+
+variable "cluster_endpoint_public_access_cidrs" {
+  description = "Allowed IPv4 CIDRs for the public EKS endpoint"
+  type        = list(string)
+
+  validation {
+    condition = (
+      length(var.cluster_endpoint_public_access_cidrs) > 0 &&
+      alltrue([
+        for cidr in var.cluster_endpoint_public_access_cidrs :
+        can(cidrnetmask(cidr))
+      ])
+    )
+    error_message = "Provide at least one valid IPv4 CIDR."
+  }
+}
+

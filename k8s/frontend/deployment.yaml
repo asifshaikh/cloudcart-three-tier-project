@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: sekc69/cloudcart-frontend:local
+          image: sekc69/cloudcart-frontend:4daa5236d65145ecb8fa3ae736b62b5e38c457f1
           imagePullPolicy: Always
           ports:
             - name: http

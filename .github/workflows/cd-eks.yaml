@@ -104,5 +104,5 @@ jobs:
 
       - name: Get Frontend Service URL
         run: |
-          FRONTEND_SERVICE_URL=$(kubectl get svc cloudcart-frontend -n $K8S_NAMESPACE -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          FRONTEND_SERVICE_URL=$(kubectl get svc frontend -n $K8S_NAMESPACE -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
           echo "Frontend Service URL: http://$FRONTEND_SERVICE_URL"

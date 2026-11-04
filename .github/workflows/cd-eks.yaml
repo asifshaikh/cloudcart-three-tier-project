@@ -1,0 +1,87 @@
+name: CloudCart CD - EKS
+
+on: workflow_dispatch
+  inputs:
+    image_tag:
+      description: 'Docker image tag to deploy (commit SHA)'
+      required: true
+      type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudcart-deploy-eks
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: ap-south-1
+  EKS_CLUSTER_NAME: cloudcart-eks-dev
+  K8S_NAMESPACE: cloudcart
+  AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  IMAGE_TAG: ${{ inputs.image_tag }}
+
+jobs:
+  deploy:
+    name: Deploy to EKS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate Image Tag
+        shell: bash
+        run: |
+          if [[ ! "$IMAGE_TAG" =~ ^[a-f0-9]{40}$ ]]; then
+            echo "Error: IMAGE_TAG must be a valid commit SHA (40 hexadecimal characters)."
+            exit 1
+          fi
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Verify AWS Identity
+        run: |
+          aws sts get-caller-identity
+      
+      - name: Configure kubectl
+        run: |
+          aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
+        
+      - name: Update Kubernetes image tags
+        shell: bash
+        run: |
+          set -euo pipefail
+          BACKEND_FILE="k8s/backend/deployment.yaml"
+          FRONTEND_FILE="k8s/frontend/deployment.yaml"
+
+          sed -i -E "s|(image:[[:space:]]*sekc69/cloudcart-backend:)[^[:space:]]+|\1$IMAGE_TAG|" "$BACKEND_FILE"
+          sed -i -E "s|(image:[[:space:]]*sekc69/cloudcart-frontend:)[^[:space:]]+|\1$IMAGE_TAG|" "$FRONTEND_FILE"
+
+          echo "Updated deployment image references:"
+          grep -n 'image:' "$BACKEND_FILE"
+          grep -n 'image:' "$FRONTEND_FILE"
+      
+      - name: Deploy backend
+        run: |
+          kubectl apply -f k8s/backend/deployment.yaml -n $K8S_NAMESPACE
+      
+      - name: Deploy frontend
+        run: |
+          kubectl apply -f k8s/frontend/deployment.yaml -n $K8S_NAMESPACE
+
+      - name: Verify Deployment
+        run: |
+          kubectl rollout status deployment/cloudcart-backend -n $K8S_NAMESPACE
+          kubectl rollout status deployment/cloudcart-frontend -n $K8S_NAMESPACE
+      
+      - name: Get Frontend Service URL
+        run: |
+          FRONTEND_SERVICE_URL=$(kubectl get svc cloudcart-frontend -n $K8S_NAMESPACE -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          echo "Frontend Service URL: http://$FRONTEND_SERVICE_URL"

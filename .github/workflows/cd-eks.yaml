@@ -99,8 +99,8 @@ jobs:
 
       - name: Verify Deployment
         run: |
-          kubectl rollout status deployment/cloudcart-backend -n $K8S_NAMESPACE
-          kubectl rollout status deployment/cloudcart-frontend -n $K8S_NAMESPACE
+          kubectl rollout status deployment/backend -n $K8S_NAMESPACE
+          kubectl rollout status deployment/frontend -n $K8S_NAMESPACE
 
       - name: Get Frontend Service URL
         run: |

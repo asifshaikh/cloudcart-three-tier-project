@@ -1,11 +1,11 @@
 name: CloudCart CD - EKS
 
 on: workflow_dispatch
-  inputs:
-    image_tag:
-      description: 'Docker image tag to deploy (commit SHA)'
-      required: true
-      type: string
+inputs:
+  image_tag:
+    description: 'Docker image tag to deploy (commit SHA)'
+    required: true
+    type: string
 
 permissions:
   contents: read
@@ -45,15 +45,15 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
-      
+
       - name: Verify AWS Identity
         run: |
           aws sts get-caller-identity
-      
+
       - name: Configure kubectl
         run: |
           aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
-        
+
       - name: Update Kubernetes image tags
         shell: bash
         run: |
@@ -67,11 +67,11 @@ jobs:
           echo "Updated deployment image references:"
           grep -n 'image:' "$BACKEND_FILE"
           grep -n 'image:' "$FRONTEND_FILE"
-      
+
       - name: Deploy backend
         run: |
           kubectl apply -f k8s/backend/deployment.yaml -n $K8S_NAMESPACE
-      
+
       - name: Deploy frontend
         run: |
           kubectl apply -f k8s/frontend/deployment.yaml -n $K8S_NAMESPACE
@@ -80,7 +80,7 @@ jobs:
         run: |
           kubectl rollout status deployment/cloudcart-backend -n $K8S_NAMESPACE
           kubectl rollout status deployment/cloudcart-frontend -n $K8S_NAMESPACE
-      
+
       - name: Get Frontend Service URL
         run: |
           FRONTEND_SERVICE_URL=$(kubectl get svc cloudcart-frontend -n $K8S_NAMESPACE -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')

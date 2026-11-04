@@ -55,6 +55,26 @@ jobs:
         run: |
           aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
 
+      - name: Diagnose EKS authentication
+        shell: bash
+        run: |
+          echo "=== AWS identity ==="
+          aws sts get-caller-identity
+
+          echo "=== kubectl client ==="
+          kubectl version --client
+
+          echo "=== Kubernetes authentication ==="
+          kubectl auth can-i get deployments \
+            -n "$K8S_NAMESPACE"
+
+          kubectl auth can-i patch deployments \
+            -n "$K8S_NAMESPACE"
+
+          echo "=== Kubernetes API test ==="
+          kubectl get deployments \
+            -n "$K8S_NAMESPACE"
+
       - name: Update Kubernetes image tags
         shell: bash
         run: |

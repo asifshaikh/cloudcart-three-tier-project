@@ -37,4 +37,4 @@ jobs:
     uses: ./.github/workflows/cd-eks.yaml
     secrets: inherit
     with:
-      image_tag: ${{ jobs.docker-push.outputs.image_tag }}
+      image_tag: ${{ needs.docker-push.outputs.image_tag }}

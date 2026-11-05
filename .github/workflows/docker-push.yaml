@@ -2,7 +2,10 @@ name: CloudCart Docker Publish
 
 on:
   workflow_call:
-
+    outputs:
+      image_tag:
+        description: 'Docker image tag to deploy (commit SHA)'
+        value: ${{ jobs.publish.outputs.image_tag }}
 permissions:
   contents: read
 
@@ -10,6 +13,8 @@ jobs:
   publish:
     name: Build and Push Images
     runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ github.sha }}
     steps:
       - name: Checkout tested commit
         uses: actions/checkout@v4

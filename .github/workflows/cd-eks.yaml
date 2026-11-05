@@ -1,7 +1,7 @@
 name: CloudCart CD - EKS
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       image_tag:
         description: 'Docker image tag to deploy (commit SHA)'

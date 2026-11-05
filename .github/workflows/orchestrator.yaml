@@ -32,7 +32,9 @@ jobs:
     secrets: inherit
 
   deploy:
-    name: CloudCart Deploy
+    name: CloudCart Deploy EKS
     needs: docker-push
-    uses: ./.github/workflows/deploy.yaml
+    uses: ./.github/workflows/cd-eks.yaml
     secrets: inherit
+    with:
+      image_tag: ${{ jobs.docker-push.outputs.image_tag }}
